@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+    elasticsearch:
+        build: elasticsearch/
+        environment: 
+            ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+        ports: 
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+            - docker_ek
+    kibana:
+        build: kibana/
+        ports: 
+            - 5601:5601
+        networks:
+            - docker_ek
+        depends_on:
+            - elasticsearch
+
+networks:
+    docker_ek:
+        driver: bridge
