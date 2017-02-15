@@ -24,6 +24,7 @@ services:
         ports:
             - "8080:80"
         volumes: 
+            ## This must be the code folder for Drupal 8.2.6
             - ./code/drupal:/var/www/html
         links:  
             - mysql:mysql
