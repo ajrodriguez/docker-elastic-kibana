@@ -1,5 +1,7 @@
 version: '2'
 
+# docker rmi $(docker images -a --filter=dangling=true -q)
+
 services:
     elasticsearch:
         build: elasticsearch/
@@ -8,6 +10,7 @@ services:
         ports: 
             - "9200:9200"
             - "9300:9300"
+        command: elasticsearch -E node.name="Elasticsearch_Connector"
         networks:
             - docker_ek
     kibana:
@@ -19,14 +22,10 @@ services:
         depends_on:
             - elasticsearch
     drupal:
-        image: drupal:8.2-apache
-#        build: drupal/
-        ports:
+        build: drupal/
+        ports: 
             - "8080:80"
-        volumes: 
-            ## This must be the code folder for Drupal 8.2.6
-            - ./code/drupal:/var/www/html
-        links:  
+        links:
             - mysql:mysql
         networks:
             - docker_ek
