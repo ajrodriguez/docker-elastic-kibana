@@ -26,9 +26,9 @@ services:
         ports: 
             - "8080:80"
         volumes: 
-            #- ./code/drupal/modules:/var/www/html/modules
-            #- ./code/drupal/profiles:/var/www/html/profiles
-            #- ./code/drupal/themes:/var/www/html/themes
+            - ./code/drupal/modules:/var/www/html/modules
+            - ./code/drupal/profiles:/var/www/html/profiles
+            - ./code/drupal/themes:/var/www/html/themes
             # this takes advantage of the feature in Docker that a new anonymous
             # volume (which is what we're creating here) will be initialized with the
             # existing content of the image at the same location

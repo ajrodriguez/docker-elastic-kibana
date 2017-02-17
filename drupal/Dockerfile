@@ -44,7 +44,7 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
 	&& rm drupal.tar.gz 
 
-VOLUME ["/var/www/html/modules", "/var/www/html/profiles", "/var/www/html/themes"]
+# VOLUME ["/var/www/html/modules", "/var/www/html/profiles", "/var/www/html/themes"]
  	
 RUN chown -R www-data:www-data sites modules themes
 
