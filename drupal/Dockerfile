@@ -3,12 +3,10 @@ FROM php:7.0-apache
 
 ENV DRUSH_VERSION 8.*
 
-RUN echo 'INTALLING APACHE FROM Dockerfile'
-
 RUN a2enmod rewrite
 
 # install the PHP extensions we need
-RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev libpq-dev wget vim\
+RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev libpq-dev wget vim \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
 	&& docker-php-ext-install gd mbstring opcache pdo pdo_mysql pdo_pgsql zip
@@ -29,7 +27,10 @@ RUN { \
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 RUN ln -s /usr/local/bin/composer /usr/bin/composer
-RUN composer global require drush/drush:$DRUSH_VERSION
+# RUN composer global require drush/drush:$DRUSH_VERSION
+# RUN ln -s ~/.composer/vendor/drush/drush/drush /usr/bin/drush
+RUN php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > drush
+RUN chmod +x drush && mv drush /usr/local/bin
 
 WORKDIR /var/www/html
 
@@ -41,8 +42,11 @@ ENV DRUPAL_MD5 57526a827771ea8a06db1792f1602a85
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
 	&& echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
 	&& tar -xz --strip-components=1 -f drupal.tar.gz \
-	&& rm drupal.tar.gz \
-	&& chown -R www-data:www-data sites modules themes
+	&& rm drupal.tar.gz 
+
+VOLUME ["/var/www/html/modules", "/var/www/html/profiles", "/var/www/html/themes"]
+ 	
+RUN chown -R www-data:www-data sites modules themes
 
 RUN composer install
 
